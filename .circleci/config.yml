@@ -6,6 +6,11 @@ jobs:
     steps:
       - checkout
       - run: echo "Hello World"
+  Build1:
+    docker:
+      - image: circleci/ruby:2.4
+    steps:
+      - run: exit 1
   Test:
     docker:
       - image: circleci/ruby:2.4-node
@@ -28,9 +33,11 @@ workflows:
   Test:
     jobs:
       - Build
+      - Build1
       - Test:
           requires:
             - Build
+            - Build1
       - Deploy:
           requires:
             - Test
