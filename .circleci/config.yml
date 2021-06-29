@@ -35,9 +35,9 @@ jobs:
       - image: circleci/ruby:2.4
     steps:
       - run: sleep 25
-      - fail_fast
       - run: echo "Hello World"
       - run: docker ps
+      - fail_fast
 
   build:
     docker:
