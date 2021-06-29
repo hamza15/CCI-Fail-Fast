@@ -30,6 +30,7 @@ jobs:
     steps:
       - checkout
       - run: echo "Hello World"
+      - run: sleep 20
       - run:
           name: Fail Fast
           when: on_fail
