@@ -18,6 +18,9 @@ jobs:
     steps:
       - run: sleep 10
       - run: exit 1
+      - run:
+          name: Fail Fast
+          when: on_fail
   build:
     docker:
       - image: circleci/ruby:2.4-node
