@@ -37,7 +37,7 @@ jobs:
       - run: sleep 25
       - fail_fast
       - run: echo "Hello World"
-      - run: exit 1
+      - run: docker ps
 
   build:
     docker:
