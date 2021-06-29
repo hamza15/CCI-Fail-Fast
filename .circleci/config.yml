@@ -36,9 +36,10 @@ jobs:
     docker:
       - image: circleci/ruby:2.4
     steps:
-      - run: sleep 20
+      - run: sleep 25
       - fail_fast
       - run: echo "Hello World"
+      - run: exit 1
 
   build:
     docker:
@@ -47,7 +48,7 @@ jobs:
       - checkout
       - run: echo "Hello World"
       - run: sleep 10
-      - run: exit 1
+      - fail_fast
 
   e2e-cli:
     docker:
