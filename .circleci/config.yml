@@ -1,146 +1,44 @@
-version: "2.1"
-
+version: 2.1
 commands:
   fail_fast:
     steps:
       - run:
-          name: 'Fail Fast'
-          when: on_fail
+          name: Fail job if others have failed
           command: |
-            echo "Canceling workflow as a step resulted in failure"
-            curl -X POST --header "Content-Type: application/json" "https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/cancel?circle-token=${CIRCLE_TOKEN}"          
-
-
+            STATUS=$(curl "https://circleci.com/api/v2/workflow/$CIRCLE_WORKFLOW_ID?circle-token=$CIRCLE_TOKEN" | jq -r '.status')
+            if [[ "$STATUS" == "failing" ]]; then
+              exit 1
+            else
+              exit 0
+            fi
 jobs:
-  test1:
-    docker:
-      - image: circleci/ruby:2.4-node
-    steps:
-      - checkout
-      - run: echo $CIRCLE_WORKFLOW_ID    
-  Setup:
-    docker:
-      - image: circleci/ruby:2.4-node
-    steps:
-      - checkout
-      - run: echo "Hello World"
-  validate:
-    docker:
-      - image: circleci/ruby:2.4-node
-    steps:
-      - checkout
-      - run: echo "Hello World"
-  lint:
-    docker:
-      - image: circleci/ruby:2.4
-    steps:
-      - run: sleep 25
-      - run: echo "Hello World"
-      - run: docker ps
-      - fail_fast
-
-  build:
-    docker:
-      - image: circleci/ruby:2.4-node
-    steps:
-      - checkout
-      - run: echo "Hello World"
-      - run: sleep 10
-      - fail_fast
-
-  e2e-cli:
-    docker:
-      - image: circleci/ruby:2.4-node
-    steps:
-      - checkout
-      - run: sleep 20
-      - run: echo "Hello World"
-      - fail_fast
-
   test:
     docker:
-      - image: circleci/ruby:2.4-node
+      - image: circleci/node:12.16
     steps:
       - checkout
       - fail_fast
-      - run: echo "Hello World"
-
-  test-browsers:
+      - run: exit 1
+  test2:
     docker:
-      - image: circleci/ruby:2.4-node
+      - image: circleci/node:12.16
     steps:
       - checkout
       - fail_fast
-      - run: echo "Hello World"
-
-  e2e-cli-ng-snapshots:
+      - run: sleep 20
+  test3:
     docker:
-      - image: circleci/ruby:2.4-node
+      - image: circleci/node:12.16
     steps:
       - checkout
+      - run: sleep 30
       - fail_fast
-      - run: echo "Hello World"
-
-  e2e-cli-node-12:
-    docker:
-      - image: circleci/ruby:2.4-node
-    steps:
-      - checkout
+      - run: sleep 10
       - fail_fast
-      - run: echo "Hello World"
-
-  e2e-cli-win:
-    docker:
-      - image: circleci/ruby:2.4-node
-    steps:
-      - checkout
-      - fail_fast
-      - run: echo "Hello World"
-
-  snapshot_publish:
-    docker:
-      - image: circleci/ruby:2.4-node
-    steps:
-      - checkout
-      - fail_fast
-      - run: echo "Hello World"
-
+      - run: echo hi
 workflows:
-  Test:
+  all-tests:
     jobs:
-      - test1
-      - Setup:
-          requires:
-            - test1
-      - validate:
-          requires:
-            - Setup
-      - lint:
-          requires:
-            - Setup
-      - build:  
-          requires:
-            - Setup
-      - e2e-cli:
-          requires:
-            - build
-      - test:
-          requires:
-            - build
-      - test-browsers:
-          requires:
-            - build
-      - e2e-cli-ng-snapshots:
-          requires:
-            - e2e-cli
-      - e2e-cli-node-12:
-          requires:
-            - e2e-cli
-      - e2e-cli-win:
-          requires:
-            - test
-      - snapshot_publish:
-          requires:
-            - e2e-cli
-            - build
-            - test
+      - test
+      - test2
+      - test3
