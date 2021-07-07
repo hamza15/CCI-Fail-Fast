@@ -11,6 +11,7 @@ commands:
             else
               exit 0
             fi
+
 jobs:
   test:
     docker:
@@ -18,6 +19,7 @@ jobs:
     steps:
       - checkout
       - fail_fast
+      - run: exit 1
   test2:
     docker:
       - image: circleci/node:12.16
