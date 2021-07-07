@@ -39,6 +39,7 @@ jobs:
       - run: docker ps
       - fail_fast
 
+
   build:
     docker:
       - image: circleci/ruby:2.4-node
