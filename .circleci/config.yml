@@ -26,7 +26,7 @@ jobs:
     steps:
       - checkout
       - fail_fast
-      - run: sleep 20
+      - run: sleep 10
   test3:
     docker:
       - image: circleci/node:12.16
