@@ -12,6 +12,7 @@ commands:
               exit 0
             fi
 
+
 jobs:
   test:
     docker:
